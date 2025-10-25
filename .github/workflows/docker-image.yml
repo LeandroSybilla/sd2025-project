@@ -23,4 +23,4 @@ jobs:
 
     - uses: actions/checkout@v4
     - name: Build the Docker image for simulator
-      run: docker build ./simulador/ --file "./simulador/Dockerfile" --tag sd2025-backend:$(date +%s)
+      run: docker build ./simulator/ --file "./simulator/Dockerfile" --tag sd2025-backend:$(date +%s)
