@@ -17,12 +17,10 @@ jobs:
     - name: Build the Docker image for backend
       run: docker build ./backend/ --file "./backend/Dockerfile" --tag sd2025-backend:$(date +%s)
 
-    steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image for frontend
       run: docker build ./frontend/ --file "./frontend/Dockerfile" --tag sd2025-backend:$(date +%s)
 
-    steps:
     - uses: actions/checkout@v4
     - name: Build the Docker image for simulator
       run: docker build ./simulador/ --file "./simulador/Dockerfile" --tag sd2025-backend:$(date +%s)
