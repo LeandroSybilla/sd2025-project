@@ -34,7 +34,7 @@ jobs:
         context: ./backend/
         file: ./backend/Dockerfile
         push: true
-        tags: sd2025-backend:$(date +%s)
+        tags: leandrosybilla/backend:latest
 
     - uses: actions/checkout@v4
     - name: Build the Docker image for frontend
