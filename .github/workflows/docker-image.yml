@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+
     - name: Checkout
       uses: actions/checkout@v5
 
@@ -27,16 +28,15 @@ jobs:
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
-      with:
-        platforms: linux/amd64,linux/arm64
 
     - name: Build and push
       uses: docker/build-push-action@v6
       with:
         context: ./backend/
+        platforms: linux/amd64,linux/arm64
         file: ./backend/Dockerfile
         push: true
-        tags: leandrosybilla/backend:latest
+        tags: ${{ secrets.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}
 
     # - uses: actions/checkout@v4
     # - name: Build the Docker image for frontend
