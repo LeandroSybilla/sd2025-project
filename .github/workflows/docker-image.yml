@@ -36,7 +36,7 @@ jobs:
         platforms: linux/amd64,linux/arm64
         file: ./backend/Dockerfile
         push: true
-        tags: ${{ secrets.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}
 
     # - uses: actions/checkout@v4
     # - name: Build the Docker image for frontend
