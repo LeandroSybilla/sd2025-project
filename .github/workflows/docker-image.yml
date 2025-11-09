@@ -78,3 +78,7 @@ jobs:
           git add k8s/*.yaml
           git commit -m "CI: Update image tags to ${{ github.sha }}" || true
           git push
+          git tag -d kub-update                  # delete the old tag locally
+          git push origin :refs/tags/kub-update  # delete the old tag remotely
+          git tag kub-update ${{ github.sha }}   # make a new tag locally
+          git push origin kub-update             # push the new local tag to the remote
