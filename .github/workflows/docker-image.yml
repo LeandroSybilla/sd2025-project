@@ -38,6 +38,23 @@ jobs:
         push: true
         tags: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}
 
+    - name: Build and push  
+      uses: docker/build-push-action@v6
+      with:
+        context: ./frontend/
+        platforms: linux/amd64,linux/arm64
+        file: ./frontend/Dockerfile
+        push: true
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-frontend:${{ github.sha }}
+
+    - name: Build and push  
+      uses: docker/build-push-action@v6
+      with:
+        context: ./simulator/
+        platforms: linux/amd64,linux/arm64
+        file: ./simulator/Dockerfile
+        push: true
+        tags: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-simulator:${{ github.sha }}
 
   update-manifests:
     needs: build
@@ -51,6 +68,8 @@ jobs:
       - name: Update Kubernetes manifests
         run: |
           sed -i 's|image:.*-backend:.*|image: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}|' k8s/backend-deployment.yaml
+          sed -i 's|image:.*-frontend:.*|image: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-frontend:${{ github.sha }}|' k8s/frontend-deployment.yaml
+          sed -i 's|image:.*-simulator:.*|image: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-simulator:${{ github.sha }}|' k8s/simulator-deployment.yaml
 
       - name: Commit and push changes
         run: |
@@ -59,11 +78,3 @@ jobs:
           git add k8s/*.yaml
           git commit -m "CI: Update image tags to ${{ github.sha }}" || true
           git push
-          
-    # - uses: actions/checkout@v4
-    # - name: Build the Docker image for frontend
-    #   run: docker build ./frontend/ --file "./frontend/Dockerfile" --tag sd2025-backend:$(date +%s)
-
-    # - uses: actions/checkout@v4
-    # - name: Build the Docker image for simulator
-    #   run: docker build ./simulator/ --file "./simulator/Dockerfile" --tag sd2025-backend:$(date +%s)
