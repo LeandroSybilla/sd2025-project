@@ -81,6 +81,6 @@ jobs:
 
       - name: Adding update tag.
         run: |
-          git push origin :refs/tags/kub-update  # delete the old tag remotely
-          git tag kub-update ${{ github.sha }}   # make a new tag locally
-          git push origin kub-update             # push the new local tag to the remote
+          git tag -d kub-update  # delete the old tag remotely
+          git tag kub-update | git rev-parse HEAD   # make a new tag locally
+          git push --force origin kub-update             # push the new local tag to the remote
