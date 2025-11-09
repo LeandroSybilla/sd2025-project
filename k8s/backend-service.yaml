@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 8000
+    targetPort: 8000 # El puerto dentro del contenedor
+    nodePort: 30001   # El puerto fijo en el que será accesible desde fuera
+  # Cambiar a NodePort para que el WebSocket sea accesible desde el navegador
+  type: NodePort 
