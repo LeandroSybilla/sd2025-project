@@ -5,7 +5,7 @@ import random
 import requests
 
 # Configuration
-INGESTION_ENDPOINT = "http://backend:8000/events"  # Update this if needed
+INGESTION_ENDPOINT = "http://backend-service:8000/events"  # Update this if needed
 GPX_FILE_PATH = "trail_route.gpx"  # Path to the GPX file
 ATHLETES = [
     {"name": "John Doe", "gender": "male"},

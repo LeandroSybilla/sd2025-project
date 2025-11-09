@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "leandro/dev" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "leandro/dev" ]
+    branches: [ "main" ]
 
 jobs:
 
