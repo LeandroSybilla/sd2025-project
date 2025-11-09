@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:666bec3fa756b490571118131483f45088c6b0da
+        image: leandrosybilla/sd2526-backend:6f696251be131d50780cba66458c60545b6aac21
         ports:
         - containerPort: 8000
         resources:
