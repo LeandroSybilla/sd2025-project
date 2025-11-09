@@ -8,7 +8,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/LeandroSybilla/sd2025-project.git'
-    targetRevision: main
+    targetRevision: kub-update
     path: k8s
   destination:
     server: 'https://kubernetes.default.svc'
