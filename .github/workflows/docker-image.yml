@@ -38,6 +38,28 @@ jobs:
         push: true
         tags: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}
 
+
+  update-manifests:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Update Kubernetes manifests
+        run: |
+          sed -i 's|image:.*-backend:.*|image: ${{ vars.DOCKERHUB_USERNAME }}/sd2526-backend:${{ github.sha }}|' k8s/backend-deployment.yaml
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions-bot@github.com"
+          git add k8s/*.yaml
+          git commit -m "CI: Update image tags to ${{ github.sha }}" || true
+          git push
+          
     # - uses: actions/checkout@v4
     # - name: Build the Docker image for frontend
     #   run: docker build ./frontend/ --file "./frontend/Dockerfile" --tag sd2025-backend:$(date +%s)

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simulator-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simulator
+  template:
+    metadata:
+      labels:
+        app: simulator
+    spec:
+      containers:
+      - name: simulator
+        image: sd2526/simuladados-simulator:6728a9425ef3a61ebd9a3e1c76419661aea4558f
+        env:
+        - name: BACKEND_URL
+          value: "http://backend-service:8000"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
