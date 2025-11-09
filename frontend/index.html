@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <div id="test-update"><h3>Version 0.0.2</h3></div>
+    <div id="test-update"><h3>Version 0.0.3</h3></div>
     <div id="map"></div>
     <script>
         // Create the Leaflet map
@@ -27,7 +27,7 @@
         }).addTo(map);
 
         // Load the GPX file and center the map
-        const gpxFile = 'trail_route1.gpx'; // The GPX file is served from the shared volume
+        const gpxFile = 'trail_route.gpx'; // The GPX file is served from the shared volume
         const gpxLayer = new L.GPX(gpxFile, {
             async: true, // Load the GPX file asynchronously
             marker_options: {
