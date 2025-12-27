@@ -1,11 +1,13 @@
+import json
 import gpxpy
 import gpxpy.gpx
 import time
 import random
 import requests
+import pika
+import os
 
 # Configuration
-INGESTION_ENDPOINT = "http://backend-service:8000/events"  # Update this if needed
 GPX_FILE_PATH = "trail_route.gpx"  # Path to the GPX file
 ATHLETES = [
     {"name": "John Doe", "gender": "male"},
@@ -58,8 +60,14 @@ def simulate_athlete(athlete, points, speed_kmh):
 
             # Send the event to the backend
             try:
-                response = requests.post(INGESTION_ENDPOINT, json=event)
-                print(f"Sent: {event} | Response: {response.status_code}")
+                credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
+                connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], '/', credentials))
+                channel = connection.channel()
+                channel.queue_declare(queue='hello')
+                channel.basic_publish(exchange='', routing_key='hello', body=json.dumps(event))
+                connection.close()
+                # response = requests.post(INGESTION_ENDPOINT, json=event)
+                print(f"Sent: {event}")
             except Exception as e:
                 print(f"Error sending event: {e}")
 

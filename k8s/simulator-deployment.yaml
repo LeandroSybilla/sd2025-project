@@ -14,10 +14,16 @@ spec:
     spec:
       containers:
       - name: simulator
-        image: leandrosybilla/sd2526-simulator:811cf8526a9a528fb9575b5128935deab22dfd52
+        image: local/simulator
         env:
-        - name: BACKEND_URL
-          value: "http://backend-service:8000"
+        - name: RABBIT_URL
+          value: "10.96.238.249"
+        - name: RABBIT_PORT
+          value: "5672"
+        - name: RABBIT_USER
+          value: "default_user_CcJpclM0MAy-WQXf1f1"
+        - name: RABBIT_PASS
+          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         resources:
           requests:
             cpu: "100m"

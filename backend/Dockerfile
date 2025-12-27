@@ -3,6 +3,7 @@ FROM python:3.9-slim
 
 # Instalar dependências
 RUN pip install fastapi uvicorn[standard]
+RUN pip install pika --upgrade
 
 # Copiar o código do backend
 WORKDIR /app
@@ -13,3 +14,4 @@ EXPOSE 8000
 
 # Comando para iniciar o backend
 CMD ["uvicorn", "backend:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+# CMD ["python", "backend.py"]
