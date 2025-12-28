@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sd2025-monitor
+  namespace: grupo-6
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - backend
+          - simulator
+  namespaceSelector:
+    matchNames:
+      - grupo-6
+  endpoints:
+  - port: http-metrics
+    path: /metrics
+    interval: 15s

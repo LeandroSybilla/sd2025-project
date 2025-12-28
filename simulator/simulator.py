@@ -3,6 +3,16 @@ import gpxpy.gpx
 import time
 import random
 import requests
+from prometheus_client import start_http_server, Counter, Histogram
+
+# --- Prometheus Metrics Definition ---
+# Note: These metrics are exposed on port 8000 by default.
+MESSAGES_SENT_TOTAL = Counter('messages_sent_total', 'Total number of messages sent to the backend.')
+# Note: While requested here, 'positions_processed' is typically a metric for the consumer/backend.
+# We include it for demonstration purposes, incrementing it upon successful sending.
+POSITIONS_PROCESSED_TOTAL = Counter('positions_processed_total', 'Total number of positions processed (simulated in producer).')
+# Histogram to track the duration of sending an event.
+PROCESSING_LATENCY_SECONDS = Histogram('processing_latency_seconds', 'Processing latency for events (in seconds).')
 
 # Configuration
 INGESTION_ENDPOINT = "http://backend-service:8000/events"  # Update this if needed
@@ -56,12 +66,20 @@ def simulate_athlete(athlete, points, speed_kmh):
                 "event": "running"
             }
 
-            # Send the event to the backend
-            try:
-                response = requests.post(INGESTION_ENDPOINT, json=event)
-                print(f"Sent: {event} | Response: {response.status_code}")
-            except Exception as e:
-                print(f"Error sending event: {e}")
+            # --- Metrics Instrumentation ---
+            with PROCESSING_LATENCY_SECONDS.time():
+                try:
+                    # Send the event to the backend
+                    response = requests.post(INGESTION_ENDPOINT, json=event)
+                    print(f"Sent: {event} | Response: {response.status_code}")
+                    
+                    if 200 <= response.status_code < 300:
+                        # Increment counters on successful send
+                        MESSAGES_SENT_TOTAL.inc()
+                        POSITIONS_PROCESSED_TOTAL.inc()
+
+                except Exception as e:
+                    print(f"Error sending event: {e}")
 
             # Wait for 1 second to simulate real-time updates
             time.sleep(1)
@@ -97,4 +115,9 @@ def simulate_multiple_athletes():
 
 # Run the simulation
 if __name__ == "__main__":
+    # --- Start Prometheus Metrics Server ---
+    # This server will run in a background thread and expose /metrics on port 8000
+    start_http_server(8000)
+    print("Prometheus metrics server started on port 8000.")
+    
     simulate_multiple_athletes()

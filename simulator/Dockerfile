@@ -1,8 +1,9 @@
 # Usar a imagem base do Python
 FROM python:3.9-slim
 
-# Instalar dependências
-RUN pip install requests gpxpy
+# Copiar requirements e instalar dependências
+COPY requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
 
 # Copiar o código do simulador
 WORKDIR /app
