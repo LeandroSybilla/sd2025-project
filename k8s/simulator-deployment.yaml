@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: simulator
-        image: local/simulator
+        image: leandrosybilla/sd2526-simulator:c6d1c1162b7aef9bab958378be7cf00964b448c6
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
