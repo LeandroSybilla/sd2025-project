@@ -14,7 +14,16 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:c6d1c1162b7aef9bab958378be7cf00964b448c6
+        image: local/backend
+        env:
+        - name: RABBIT_URL
+          value: "10.96.238.249"
+        - name: RABBIT_PORT
+          value: "5672"
+        - name: RABBIT_USER
+          value: "default_user_CcJpclM0MAy-WQXf1f1"
+        - name: RABBIT_PASS
+          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         ports:
         - containerPort: 8000
         resources:
