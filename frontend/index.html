@@ -44,7 +44,7 @@
         const athleteMarkers = {};
 
         // Connect to the WebSocket
-        const socket = new WebSocket("ws://localhost:30016/ws");
+        const socket = new WebSocket("ws://localhost:30016");
 
         const maleIcon = L.icon({
             iconUrl: "male.png", //"https://leafletjs.com/examples/custom-icons/leaf-blue.png", // Replace with a blue icon
@@ -67,6 +67,7 @@
         });
 
         socket.onmessage = function (event) {
+            console.log(event);
             const data = JSON.parse(event.data);
 
             // Extract athlete data

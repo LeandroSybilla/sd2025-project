@@ -2,17 +2,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: simuladados-app
+  name: sd2025-project
   namespace: argocd
 spec:
-  project: default
+  project: group6
   source:
     repoURL: 'https://github.com/LeandroSybilla/sd2025-project.git'
     targetRevision: kub-update
     path: k8s
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: default
+    namespace: group6
   syncPolicy:
     automated:
       prune: true

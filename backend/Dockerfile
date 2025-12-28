@@ -1,17 +1,20 @@
-# Usar a imagem base do Python
-FROM python:3.9-slim
+# Use the Node.js image to build the app
+FROM node:22
 
-# Instalar dependências
-RUN pip install fastapi uvicorn[standard]
-RUN pip install pika --upgrade
+# Set the working directory
+WORKDIR /usr/src/app
 
-# Copiar o código do backend
-WORKDIR /app
-COPY backend.py /app/backend.py
+# Copy package.json and package-lock.json
+COPY package*.json ./
 
-# Expor a porta 8000
+# Install app dependencies
+RUN npm install
+
+# Copy the rest of the application
+COPY . .
+
+# Expose the listening port
 EXPOSE 8000
 
-# Comando para iniciar o backend
-CMD ["uvicorn", "backend:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
-# CMD ["python", "backend.py"]
+# Run the application
+CMD [ "node", "index.js" ]
