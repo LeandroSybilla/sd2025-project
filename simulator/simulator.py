@@ -6,6 +6,22 @@ import random
 import requests
 import pika
 import os
+from prometheus_client import start_http_server, Counter, Gauge
+import threading
+
+# --- Prometheus Metrics ---
+SIM_MESSAGES_PUBLISHED = Counter('sim_messages_published_total', 'Total coordinates published')
+SIM_SPEED_FACTOR = Gauge('sim_speed_factor', 'Current simulation speed factor')
+SIM_CONNECTION_ERRORS = Counter('sim_connection_errors', 'Total connection errors to RabbitMQ')
+
+def start_metrics_server():
+    start_http_server(8000)
+
+# Start metrics server in a separate thread
+metrics_thread = threading.Thread(target=start_metrics_server)
+metrics_thread.daemon = True
+metrics_thread.start()
+# --------------------------
 
 # Configuration
 GPX_FILE_PATH = "trail_route.gpx"  # Path to the GPX file
@@ -29,6 +45,7 @@ def simulate_athlete(athlete, points, speed_kmh):
     athlete_gender = athlete["gender"]
     # Convert speed to meters per second
     speed_mps = speed_kmh / 3.6
+    SIM_SPEED_FACTOR.set(speed_kmh) # Set the gauge
 
     # Simulate movement between points
     for i in range(len(points) - 1):
@@ -68,8 +85,10 @@ def simulate_athlete(athlete, points, speed_kmh):
                 connection.close()
                 # response = requests.post(INGESTION_ENDPOINT, json=event)
                 print(f"Sent: {event}")
+                SIM_MESSAGES_PUBLISHED.inc()
             except Exception as e:
                 print(f"Error sending event: {e}")
+                SIM_CONNECTION_ERRORS.inc()
 
             # Wait for 1 second to simulate real-time updates
             time.sleep(1)

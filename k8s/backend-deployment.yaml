@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend-deployment
+  namespace: grupo-6
 spec:
   replicas: 1
   selector:
@@ -11,21 +12,27 @@ spec:
     metadata:
       labels:
         app: backend
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: backend
-        image: local/backend
+        image: leandrosybilla/sd2526-backend:local
+        imagePullPolicy: Never
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq-service"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "guest"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "guest"
         ports:
         - containerPort: 8000
+        - containerPort: 9090
         resources:
           requests:
             cpu: "100m"
