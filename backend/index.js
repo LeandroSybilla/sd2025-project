@@ -25,7 +25,7 @@ console.log('WebSocket server is running on port 8000');
 const do_consume = async () => {
   const conn = await RabbitMQ.connect(rabbitMqUrl, "heartbeat=60");
   const channel = await conn.createChannel()
-  const queueName = 'group6';
+  const queueName = 'grupo6';
   await conn.createChannel();
   await channel.assertQueue(queueName, {durable: false});
   await channel.consume(queueName, async (msg) => {

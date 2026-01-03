@@ -5,14 +5,14 @@ metadata:
   name: sd2025-project
   namespace: argocd
 spec:
-  project: group6
+  project: grupo6
   source:
     repoURL: 'https://github.com/LeandroSybilla/sd2025-project.git'
     targetRevision: kub-update
     path: k8s
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: group6
+    namespace: grupo6
   syncPolicy:
     automated:
       prune: true
