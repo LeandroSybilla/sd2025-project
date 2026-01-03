@@ -9,6 +9,7 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.10.9",
+    "lodash": "^4.17.21",
     "ws": "^8.18.3"
   }
 }

@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:895c7a475db118a34a9749ff68fc186ebfcc822b
+        # image: leandrosybilla/sd2526-backend:895c7a475db118a34a9749ff68fc186ebfcc822b
+        image: local/backend
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"

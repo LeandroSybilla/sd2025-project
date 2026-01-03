@@ -1,19 +1,20 @@
 import { WebSocketServer } from 'ws';
 import RabbitMQ from 'amqplib';
+import _ from 'lodash';
 
-const socketList = [];
+const socketList = {};
 const rabbitMqUrl = `amqp://${process.env.RABBIT_USER}:${process.env.RABBIT_PASS}@${process.env.RABBIT_URL}:${process.env.RABBIT_PORT}`;
 
 const server = new WebSocketServer({ port: 8000 });
 
-server.on('connection', (socket) => {
+server.on('connection', (socket, req) => {
   console.log('Client connected');
-  socketList.push(socket);
-  
-  socket.on('message', (message) => {
-    console.log(`Received: ${message}`);
-    socket.send(`Server: ${message}`);
-  });
+  const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
+
+  const trail = url?.searchParams?.get('trail') ? url?.searchParams?.get('trail') : 'default';
+  const athlete = url?.searchParams?.get('athlete') ? url?.searchParams?.get('athlete') : 'all';
+
+  _.set(socketList, `${trail}.${athlete}`, socket);
 
   socket.on('close', () => {
     console.log('Client disconnected');
@@ -22,7 +23,7 @@ server.on('connection', (socket) => {
 
 console.log('WebSocket server is running on port 8000');
 
-const do_consume = async () => {
+const do_consume = async (queue) => {
   const conn = await RabbitMQ.connect(rabbitMqUrl, "heartbeat=60");
   const channel = await conn.createChannel()
   const queueName = 'group6';
@@ -30,6 +31,7 @@ const do_consume = async () => {
   await channel.assertQueue(queueName, {durable: false});
   await channel.consume(queueName, async (msg) => {
     if (msg !== null) {
+      console.log(msg.content);
       for await (const socket of socketList) {
         await socket.send(msg.content.toString());
       }
@@ -41,5 +43,8 @@ const do_consume = async () => {
 }
 
 (async () => {
-  do_consume();
+  // do_consume('default');
+  // do_consume('madeira_crossing');
+  // do_consume('pr9');
+  // do_consume('pr13');
 })();
