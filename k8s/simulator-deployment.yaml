@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: simulator
-        image: leandrosybilla/sd2526-simulator:d93efcff3015e4ff7d0c50bdcb7dad7176c589f0
+        image: leandrosybilla/sd2526-simulator:bb64d58906a8e02b57c144c72195259e607afbb9
         env:
         - name: RABBIT_URL
           value: "rabbitmq"
