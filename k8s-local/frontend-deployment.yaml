@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-deployment
+  namespace: grupo6
 spec:
   replicas: 1
   selector:
@@ -14,13 +15,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: leandrosybilla/sd2526-frontend:895c7a475db118a34a9749ff68fc186ebfcc822b
+        image: leandrosybilla/sd2526-frontend:7ad9498dd4be0be39e802bf1cde47f6b83455e01
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: "50m"
-            memory: "64Mi"
-          limits:
-            cpu: "100m"
-            memory: "128Mi"

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simulator-deployment
+  namespace: grupo6
 spec:
   replicas: 1
   selector:
@@ -11,10 +12,14 @@ spec:
     metadata:
       labels:
         app: simulator
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: simulator
-        image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
+        image: leandrosybilla/sd2526-simulator:7ad9498dd4be0be39e802bf1cde47f6b83455e01
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
@@ -24,10 +29,5 @@ spec:
           value: "default_user_CcJpclM0MAy-WQXf1f1"
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "250m"
-            memory: "256Mi"
+        - name: RABBIT_VHOST
+          value: "grupo6"
