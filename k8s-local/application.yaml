@@ -2,8 +2,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: sd2025-project
-  namespace: argocd
+  name: grupo6
 spec:
   project: grupo6
   source:

@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simulator-deployment
+  namespace: grupo6
 spec:
   replicas: 1
   selector:
