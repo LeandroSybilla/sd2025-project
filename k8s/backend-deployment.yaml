@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:ac6ceb2c16140c905df475768af91d9b4f16b3f1
+        image: leandrosybilla/sd2526-backend:ea3aead7cbb637cc7ab8f7a29a788327b4d9cb91
         env:
         - name: RABBIT_URL
           value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
