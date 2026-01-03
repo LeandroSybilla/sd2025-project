@@ -9,5 +9,10 @@ spec:
   ports:
   - protocol: TCP
     port: 30016
-    targetPort: 8000  # El puerto dentro del contenedor
+    targetPort: 8000
+    name: http
+  - protocol: TCP
+    port: 9090
+    targetPort: 9090
+    name: metrics
   type: LoadBalancer 
