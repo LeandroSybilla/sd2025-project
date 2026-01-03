@@ -17,13 +17,13 @@ spec:
         image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq.10.2.15.161.nip.io"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "grupo6"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "x2c3v4b5n6m7"
         resources:
           requests:
             cpu: "100m"

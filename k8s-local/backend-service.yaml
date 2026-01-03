@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 30016
+    targetPort: 8000  # El puerto dentro del contenedor
+  type: LoadBalancer 
