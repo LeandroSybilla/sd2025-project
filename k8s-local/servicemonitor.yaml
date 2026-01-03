@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: backend-monitor
-  namespace: grupo6
+  namespace: monitoring
   labels:
     release: prometheus # Common label for Prometheus Operator to pick it up
 spec:
@@ -21,7 +21,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: simulator-monitor
-  namespace: grupo6
+  namespace: monitoring
   labels:
     release: prometheus
 spec:
