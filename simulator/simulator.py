@@ -61,7 +61,7 @@ def simulate_athlete(athlete, points, speed_kmh):
             # Send the event to the backend
             try:
                 credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
-                connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], '/', credentials))
+                connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], os.environ["RABBIT_VHOST"], credentials))
                 channel = connection.channel()
                 channel.queue_declare(queue='grupo6')
                 channel.basic_publish(exchange='', routing_key='grupo6', body=json.dumps(event))

@@ -25,5 +25,7 @@ spec:
           value: "grupo6"
         - name: RABBIT_PASS
           value: "x2c3v4b5n6m7"
+        - name: RABBIT_VHOST
+          value: "grupo6"
         ports:
         - containerPort: 8000

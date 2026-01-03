@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import RabbitMQ from 'amqplib';
 
 const socketList = [];
-const rabbitMqUrl = `amqp://${process.env.RABBIT_USER}:${process.env.RABBIT_PASS}@${process.env.RABBIT_URL}:${process.env.RABBIT_PORT}`;
+const rabbitMqUrl = `amqp://${process.env.RABBIT_USER}:${process.env.RABBIT_PASS}@${process.env.RABBIT_URL}:${process.env.RABBIT_PORT}/${process.env.RABBIT_VHOST}`;
 
 const server = new WebSocketServer({ port: 8000 });
 
