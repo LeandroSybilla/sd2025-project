@@ -18,10 +18,3 @@ spec:
         image: leandrosybilla/sd2526-frontend:7fdb0257f1d982b2c1de5d93728f7f459ae2aa68
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: "50m"
-            memory: "64Mi"
-          limits:
-            cpu: "100m"
-            memory: "128Mi"

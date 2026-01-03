@@ -77,15 +77,18 @@ def simulate_athlete(athlete, points, speed_kmh):
 # Main function to simulate multiple athletes
 def simulate_multiple_athletes():
     # Read the GPX file
+    print('Loading GPX file.')
     gpx = read_gpx(GPX_FILE_PATH)
 
     # Extract all points from the GPX file
+    print('Calculating GPX coordinates.')
     points = []
     for track in gpx.tracks:
         for segment in track.segments:
             points.extend(segment.points)
 
     # Simulate each athlete in a separate thread
+    print('Importing Threads library.')
     from threading import Thread
 
     threads = []
@@ -105,4 +108,5 @@ def simulate_multiple_athletes():
 
 # Run the simulation
 if __name__ == "__main__":
+    print('Starting Simulator.')
     simulate_multiple_athletes()

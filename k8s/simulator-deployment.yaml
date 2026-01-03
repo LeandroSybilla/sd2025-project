@@ -25,10 +25,3 @@ spec:
           value: "grupo6"
         - name: RABBIT_PASS
           value: "x2c3v4b5n6m7"
-        resources:
-          requests:
-            cpu: "100m"
-            memory: "128Mi"
-          limits:
-            cpu: "250m"
-            memory: "256Mi"
