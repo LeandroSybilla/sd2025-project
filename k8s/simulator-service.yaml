@@ -10,7 +10,7 @@ spec:
     app: simulator
   ports:
   - protocol: TCP
-    port: 8000
+    port: 30046
     targetPort: 8000
     name: metrics
-  type: LoadBalancer 
+  type: LoadBalancer
