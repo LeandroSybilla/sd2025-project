@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:3c4805bc90c564cc8a1c093deb0ec51944e25c77
+        image: leandrosybilla/sd2526-backend:7fdb0257f1d982b2c1de5d93728f7f459ae2aa68
         env:
         - name: RABBIT_URL
           value: "rabbitmq.10.2.15.161.nip.io"
