@@ -4,6 +4,7 @@ FROM python:3.9-slim
 # Instalar dependências
 RUN pip install requests gpxpy
 RUN pip install pika --upgrade
+RUN pip install prometheus_client
 # Copiar o código do simulador
 WORKDIR /app
 COPY trail_route.gpx /app/trail_route.gpx

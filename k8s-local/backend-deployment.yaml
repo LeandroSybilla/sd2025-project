@@ -19,16 +19,16 @@ spec:
     spec:
       containers:
       - name: backend
-        image: leandrosybilla/sd2526-backend:e1d481164f3a4f6cf51946146f325abf398802a5
+        image: leandrosybilla/sd2526-backend:7ad9498dd4be0be39e802bf1cde47f6b83455e01
         env:
         - name: RABBIT_URL
-          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
+          value: "10.96.238.249"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "grupo6"
+          value: "default_user_CcJpclM0MAy-WQXf1f1"
         - name: RABBIT_PASS
-          value: "x2c3v4b5n6m7"
+          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: RABBIT_VHOST
           value: "grupo6"
         ports:

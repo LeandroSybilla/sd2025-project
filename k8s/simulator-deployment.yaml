@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simulator-deployment
+  namespace: grupo6
 spec:
   replicas: 1
   selector:
@@ -11,26 +12,28 @@ spec:
     metadata:
       labels:
         app: simulator
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
     spec:
       containers:
-      - name: simulator-default
-        # image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
-        image: local/simulator
+      - name: simulator
+        image: leandrosybilla/sd2526-simulator:e1d481164f3a4f6cf51946146f325abf398802a5
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "grupo6"
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: TRAIL_ID
           value: "default"
 
       - name: simulator-madeira-crossing
-        # image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
-        image: local/simulator
+        image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
@@ -44,8 +47,7 @@ spec:
           value: "madeira_crossing"
 
       - name: simulator-pr9
-        # image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
-        image: local/simulator
+        image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
@@ -59,8 +61,7 @@ spec:
           value: "pr9"
 
       - name: simulator-pr13
-        # image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
-        image: local/simulator
+        image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"

@@ -5,6 +5,22 @@ import time
 import random
 import pika
 import os
+from prometheus_client import start_http_server, Counter, Gauge
+import threading
+
+# --- Prometheus Metrics ---
+SIM_MESSAGES_PUBLISHED = Counter('sim_messages_published_total', 'Total coordinates published')
+SIM_SPEED_FACTOR = Gauge('sim_speed_factor', 'Current simulation speed factor')
+SIM_CONNECTION_ERRORS = Counter('sim_connection_errors', 'Total connection errors to RabbitMQ')
+
+def start_metrics_server():
+    start_http_server(8000)
+
+# Start metrics server in a separate thread
+metrics_thread = threading.Thread(target=start_metrics_server)
+metrics_thread.daemon = True
+metrics_thread.start()
+# --------------------------
 
 # Configuration
 TRAILS = {
@@ -113,6 +129,7 @@ def simulate_athlete(athlete, points, speed_kmh, queue):
     athlete_gender = athlete["gender"]
     # Convert speed to meters per second
     speed_mps = speed_kmh / 3.6
+    SIM_SPEED_FACTOR.set(speed_kmh) # Set the gauge
 
     # Simulate movement between points
     for i in range(len(points) - 1):
@@ -146,14 +163,16 @@ def simulate_athlete(athlete, points, speed_kmh, queue):
             # Send the event to the backend
             try:
                 credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
-                connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], '/', credentials))
+                connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], os.environ["RABBIT_VHOST"], credentials))
                 channel = connection.channel()
                 channel.queue_declare(queue=queue)
                 channel.basic_publish(exchange='', routing_key=queue, body=json.dumps(event))
                 connection.close()
                 print(f"Sent: {event}")
+                SIM_MESSAGES_PUBLISHED.inc()
             except Exception as e:
                 print(f"Error sending event: {e}")
+                SIM_CONNECTION_ERRORS.inc()
 
             # Wait for 1 second to simulate real-time updates
             time.sleep(1)
@@ -167,6 +186,7 @@ def simulate_multiple_athletes(trail):
     gpx = read_gpx(selected_trail["file"])
 
     # Extract all points from the GPX file
+    print('Calculating GPX coordinates.')
     points = []
     for track in gpx.tracks:
         for segment in track.segments:
@@ -175,6 +195,7 @@ def simulate_multiple_athletes(trail):
     trail_athletes = random.sample(ATHLETES, selected_trail["maxAthetes"])
     
     # Simulate each athlete in a separate thread
+    print('Importing Threads library.')
     from threading import Thread
     
     threads = []
