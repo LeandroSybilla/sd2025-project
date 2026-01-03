@@ -18,7 +18,7 @@ spec:
         image: leandrosybilla/sd2526-simulator:bb64d58906a8e02b57c144c72195259e607afbb9
         env:
         - name: RABBIT_URL
-          value: "rabbitmq"
+          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
