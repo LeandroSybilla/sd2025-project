@@ -1,0 +1,37 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-monitor
+  namespace: grupo-6
+  labels:
+    release: prometheus # Common label for Prometheus Operator to pick it up
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  namespaceSelector:
+    matchNames:
+      - grupo-6
+  endpoints:
+  - port: metrics # Assuming the service has a port named 'metrics' or use targetPort if number
+    path: /metrics
+    interval: 15s
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: simulator-monitor
+  namespace: grupo-6
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: simulator
+  namespaceSelector:
+    matchNames:
+      - grupo-6
+  endpoints:
+  - port: metrics
+    path: /metrics
+    interval: 15s
