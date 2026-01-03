@@ -3,7 +3,6 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: grupo6
-  namespace: grupo6
 spec:
   project: grupo6
   source:
