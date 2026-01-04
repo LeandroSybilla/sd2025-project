@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: simulator
-        image: leandrosybilla/sd2526-simulator:e1d481164f3a4f6cf51946146f325abf398802a5
+        image: leandrosybilla/sd2526-simulator:359db071dc66dcf5538fc0534f21ab311be1094b
         env:
         - name: RABBIT_URL
           value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
