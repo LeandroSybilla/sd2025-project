@@ -28,7 +28,9 @@ spec:
         - name: RABBIT_USER
           value: "grupo6"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "x2c3v4b5n6m7"
+        - name: RABBIT_VHOST
+          value: "grupo6"
         - name: TRAIL_ID
           value: "grupo6_default"
 
@@ -36,13 +38,15 @@ spec:
         image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "grupo6"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "x2c3v4b5n6m7"
+        - name: RABBIT_VHOST
+          value: "grupo6"
         - name: TRAIL_ID
           value: "grupo6_madeira_crossing"
 
@@ -50,13 +54,15 @@ spec:
         image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "grupo6"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "x2c3v4b5n6m7"
+        - name: RABBIT_VHOST
+          value: "grupo6"
         - name: TRAIL_ID
           value: "grupo6_pr9"
 
@@ -64,12 +70,14 @@ spec:
         image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
         env:
         - name: RABBIT_URL
-          value: "10.96.238.249"
+          value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
         - name: RABBIT_PORT
           value: "5672"
         - name: RABBIT_USER
-          value: "default_user_CcJpclM0MAy-WQXf1f1"
+          value: "grupo6"
         - name: RABBIT_PASS
-          value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
+          value: "x2c3v4b5n6m7"
+        - name: RABBIT_VHOST
+          value: "grupo6"
         - name: TRAIL_ID
           value: "grupo6_pr13"
