@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <div id="test-update"><h3>Version 0.5.0</h3></div>
+    <div id="test-update"><h3>Version 0.7.0</h3></div>
     <div id="map"></div>
     <script>
         // Create the Leaflet map
@@ -27,7 +27,7 @@
         }).addTo(map);
 
         // Load the GPX file and center the map
-        const gpxFile = 'trail_route.gpx'; // The GPX file is served from the shared volume
+        const gpxFile = 'pr9_madeira.gpx'; // The GPX file is served from the shared volume
         const gpxLayer = new L.GPX(gpxFile, {
             async: true, // Load the GPX file asynchronously
             marker_options: {
@@ -44,7 +44,7 @@
         const athleteMarkers = {};
 
         // Connect to the WebSocket
-        const socket = new WebSocket("ws://10.2.15.161:30016");
+        const socket = new WebSocket("ws://localhost:30016/?trail=group6_pr9&athlete=Ethan Carter");
         
         const maleIcon = L.icon({
             iconUrl: "male.png", //"https://leafletjs.com/examples/custom-icons/leaf-blue.png", // Replace with a blue icon
