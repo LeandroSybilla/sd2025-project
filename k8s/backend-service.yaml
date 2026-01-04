@@ -3,6 +3,9 @@ kind: Service
 metadata:
   name: backend-service
   namespace: grupo6
+  labels:              
+    app: backend       
+    release: prometheus 
 spec:
   selector:
     app: backend
@@ -12,7 +15,7 @@ spec:
     targetPort: 8000
     name: http
   - protocol: TCP
-    port: 9090
+    port: 30036
     targetPort: 9090
-    name: metrics
-  type: LoadBalancer 
+    name: metrics      
+  type: LoadBalancer
