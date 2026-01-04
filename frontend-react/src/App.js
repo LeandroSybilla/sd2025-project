@@ -114,7 +114,7 @@ export default function App() {
   const connect = () => {
     console.log('connect');
     if (websocket) { websocket.close() }
-    setWebsocket(new WebSocket(`ws://localhost:30016/?trail=${trail}&athlete=${athlete}`));
+    setWebsocket(new WebSocket(`ws://10.2.15.161:30016/?trail=${trail}&athlete=${athlete}`));
   }
 
   const loadTrailLines = (trail) => {
