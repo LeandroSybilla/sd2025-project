@@ -32,7 +32,7 @@ spec:
         - name: RABBIT_VHOST
           value: "grupo6"
         - name: TRAIL_ID
-          value: "default"
+          value: "grupo6_default"
 
       - name: simulator-madeira-crossing
         image: local/simulator
@@ -48,7 +48,7 @@ spec:
         - name: RABBIT_VHOST
           value: "grupo6"
         - name: TRAIL_ID
-          value: "madeira_crossing"
+          value: "grupo6_madeira_crossing"
 
       - name: simulator-pr9
         image: local/simulator
@@ -64,7 +64,7 @@ spec:
         - name: RABBIT_VHOST
           value: "grupo6"
         - name: TRAIL_ID
-          value: "pr9"
+          value: "grupo6_pr9"
 
       - name: simulator-pr13
         image: local/simulator
@@ -80,4 +80,4 @@ spec:
         - name: RABBIT_VHOST
           value: "grupo6"
         - name: TRAIL_ID
-          value: "pr13"
+          value: "grupo6_pr13"

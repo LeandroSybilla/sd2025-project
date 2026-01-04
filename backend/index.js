@@ -50,11 +50,11 @@ const rabbitMqUrl = `amqp://${process.env.RABBIT_USER}:${process.env.RABBIT_PASS
 const server = new WebSocketServer({ port: 8000 });
 
 server.on('connection', (socket, req) => {
-  console.log('Client connected');
   const url = new URL(`http://${process.env.HOST ?? 'localhost'}${req.url}`);
-
   const trail = url?.searchParams?.get('trail') ? url?.searchParams?.get('trail') : 'default';
   const athlete = url?.searchParams?.get('athlete') ? url?.searchParams?.get('athlete') : 'all';
+
+  console.log(`Client connected - Requesting ${trail} and data from ${athlete}`);
 
   if ( _.isNil(_.get(socketList, `${trail}.${athlete}`))) {
     _.set(socketList, `${trail}.${athlete}`, []);
@@ -97,8 +97,8 @@ const do_consume = async (queue) => {
 }
 
 (async () => {
-  do_consume('group6_default');
-  do_consume('group6_madeira_crossing');
-  do_consume('group6_pr9');
-  do_consume('group6_pr13');
+  do_consume('grupo6_default');
+  do_consume('grupo6_madeira_crossing');
+  do_consume('grupo6_pr9');
+  do_consume('grupo6_pr13');
 })();

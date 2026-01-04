@@ -24,10 +24,10 @@ metrics_thread.start()
 
 # Configuration
 TRAILS = {
-    "default": { "name": "Default", "queue": "group6_default", "file": "trail_route.gpx", "maxAthetes": 30},
-    "madeira_crossing": { "name": "Madeira Crossing", "queue": "group6_madeira_crossing", "file": "madeira_crossing.gpx", "maxAthetes": 10 },
-    "pr9": { "name": "PR9 - Levada do Caldeirão", "queue": "group6_pr9", "file": "pr9_madeira.gpx", "maxAthetes": 8 },
-    "pr13": { "name": "PR13 - Vereda do Fanal", "queue": "group6_pr13", "file": "pr13_madeira.gpx", "maxAthetes": 5 }
+    "grupo6_default": { "name": "Default", "queue": "grupo6_default", "file": "trail_route.gpx", "maxAthetes": 30},
+    "grupo6_madeira_crossing": { "name": "Madeira Crossing", "queue": "grupo6_madeira_crossing", "file": "madeira_crossing.gpx", "maxAthetes": 10 },
+    "grupo6_pr9": { "name": "PR9 - Levada do Caldeirão", "queue": "grupo6_pr9", "file": "pr9_madeira.gpx", "maxAthetes": 8 },
+    "grupo6_pr13": { "name": "PR13 - Vereda do Fanal", "queue": "grupo6_pr13", "file": "pr13_madeira.gpx", "maxAthetes": 5 }
 }
 
 ATHLETES = [
