@@ -68,11 +68,32 @@ const do_consume = async () => {
   const queueName = 'grupo6';
   await conn.createChannel();
   await channel.assertQueue(queueName, {durable: false});
-  await channel.consume(queueName, async (msg) => {
-    if (msg !== null) {
+  await channel.assertQueue(queueName, { durable: false });
+
+  channel.consume(queueName, async (msg) => {
+    if (!msg) return;
+
+    const start = process.hrtime.bigint();
+    let status = 'success';
+
+    try {
+      const payload = JSON.parse(msg.content.toString());
+      if (payload?.athlete) {
+        activeRunnersSet.add(payload.athlete);
+        raceActiveRunners.set(activeRunnersSet.size);
+      }
+
       for await (const socket of socketList) {
         await socket.send(msg.content.toString());
       }
+    } catch (err) {
+      status = 'error';
+      console.error('Failed to process message', err);
+    } finally {
+      const durationSec = Number(process.hrtime.bigint() - start) / 1e9;
+      raceProcessingDuration.observe(durationSec);
+      raceProcessedMessages.inc({ status });
+      channel.ack(msg);
     }
   });
 }
