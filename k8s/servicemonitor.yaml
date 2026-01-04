@@ -4,7 +4,7 @@ metadata:
   name: backend-monitor
   namespace: grupo6
   labels:
-    release: prometheus # Common label for Prometheus Operator to pick it up
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
@@ -23,7 +23,7 @@ metadata:
   name: simulator-monitor
   namespace: grupo6
   labels:
-    release: prometheus
+    release: kube-prometheus-stack
 spec:
   selector:
     matchLabels:
