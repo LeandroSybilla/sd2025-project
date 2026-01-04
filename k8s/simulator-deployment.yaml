@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: simulator
-        image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
+        image: leandrosybilla/sd2526-simulator:68966fa6f42210061403a28a5ec7eccee10be7a9
         env:
         - name: RABBIT_URL
           value: "rabbitmq-cluster.rabbitmq-system.svc.cluster.local"
@@ -33,7 +33,7 @@ spec:
           value: "grupo6_default"
 
       - name: simulator-madeira-crossing
-        image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
+        image: leandrosybilla/sd2526-simulator:68966fa6f42210061403a28a5ec7eccee10be7a9
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
@@ -47,7 +47,7 @@ spec:
           value: "grupo6_madeira_crossing"
 
       - name: simulator-pr9
-        image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
+        image: leandrosybilla/sd2526-simulator:68966fa6f42210061403a28a5ec7eccee10be7a9
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
@@ -61,7 +61,7 @@ spec:
           value: "grupo6_pr9"
 
       - name: simulator-pr13
-        image: leandrosybilla/sd2526-simulator:c9e44ec100ab1f57b17d37f9ed27c62dd2824fa8
+        image: leandrosybilla/sd2526-simulator:68966fa6f42210061403a28a5ec7eccee10be7a9
         env:
         - name: RABBIT_URL
           value: "10.96.238.249"
