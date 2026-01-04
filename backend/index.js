@@ -42,7 +42,9 @@ metricsApp.listen(9090, '0.0.0.0', () => {
 });
 // --------------------------------
 
-const socketList = [];
+const athletesPerTrail = {};
+const socketList = {};
+
 const rabbitMqUrl = `amqp://${process.env.RABBIT_USER}:${process.env.RABBIT_PASS}@${process.env.RABBIT_URL}:${process.env.RABBIT_PORT}/${process.env.RABBIT_VHOST}`;
 
 const server = new WebSocketServer({ port: 8000 });
@@ -54,7 +56,11 @@ server.on('connection', (socket, req) => {
   const trail = url?.searchParams?.get('trail') ? url?.searchParams?.get('trail') : 'default';
   const athlete = url?.searchParams?.get('athlete') ? url?.searchParams?.get('athlete') : 'all';
 
-  _.set(socketList, `${trail}.${athlete}`, socket);
+  if ( _.isNil(_.get(socketList, `${trail}.${athlete}`))) {
+    _.set(socketList, `${trail}.${athlete}`, []);
+  }
+
+  socketList[trail][athlete].push(socket);
 
   socket.on('close', () => {
     console.log('Client disconnected');
@@ -64,24 +70,35 @@ server.on('connection', (socket, req) => {
 console.log('WebSocket server is running on port 8000');
 
 const do_consume = async (queue) => {
+  console.log(`do_consume: ${queue}`);
   const conn = await RabbitMQ.connect(rabbitMqUrl, "heartbeat=60");
   const channel = await conn.createChannel()
-  const queueName = 'grupo6';
-  await conn.createChannel();
-  await channel.assertQueue(queueName, {durable: false});
-  await channel.consume(queueName, async (msg) => {
-    if (msg !== null) {
-      console.log(msg.content);
-      for await (const socket of socketList) {
+  await channel.assertQueue(queue, {durable: false});
+  await channel.consume(queue, async (msg) => {
+    if (msg === null) return;
+
+    const messageJson = JSON.parse(msg.content.toString());
+
+    if (_.isEmpty(socketList) || _.isEmpty(socketList[messageJson.queue])) return;
+    
+    if (!_.isEmpty(socketList[messageJson.queue]['all'])) {
+      for await (const socket of socketList[messageJson.queue]['all']) {
         await socket.send(msg.content.toString());
       }
     }
+
+    if (!_.isEmpty(socketList[messageJson.queue][messageJson.athlete])) {
+      for await (const socket of socketList[messageJson.queue][messageJson.athlete]) {
+        await socket.send(msg.content.toString());
+      }
+    }
+
   });
 }
 
 (async () => {
-  // do_consume('default');
-  // do_consume('madeira_crossing');
-  // do_consume('pr9');
-  // do_consume('pr13');
+  do_consume('group6_default');
+  do_consume('group6_madeira_crossing');
+  do_consume('group6_pr9');
+  do_consume('group6_pr13');
 })();
