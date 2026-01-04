@@ -30,7 +30,7 @@ spec:
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: TRAIL_ID
-          value: "default"
+          value: "grupo6_default"
 
       - name: simulator-madeira-crossing
         image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
@@ -44,7 +44,7 @@ spec:
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: TRAIL_ID
-          value: "madeira_crossing"
+          value: "grupo6_madeira_crossing"
 
       - name: simulator-pr9
         image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
@@ -58,7 +58,7 @@ spec:
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: TRAIL_ID
-          value: "pr9"
+          value: "grupo6_pr9"
 
       - name: simulator-pr13
         image: leandrosybilla/sd2526-simulator:895c7a475db118a34a9749ff68fc186ebfcc822b
@@ -72,4 +72,4 @@ spec:
         - name: RABBIT_PASS
           value: "iWR6qS0N2jLQGkdBVYl1FwePHoPAjIjw"
         - name: TRAIL_ID
-          value: "pr13"
+          value: "grupo6_pr13"
