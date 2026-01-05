@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: leandrosybilla/sd2526-frontend:4ee0345992032879fa5aca20a2222b3dd22ae7fc
+        image: leandrosybilla/sd2526-frontend:85c57ee5d8c523f116e50beafae9beca8831e3e4
         ports:
         - containerPort: 80
