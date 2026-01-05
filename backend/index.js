@@ -24,11 +24,19 @@ const raceProcessingDuration = new client.Histogram({
 
 const raceActiveRunners = new client.Gauge({
   name: 'race_active_runners',
-  help: 'Number of active runners detected',
+  help: 'Number of active runners detected across all trails (TTL filtered)',
   registers: [register]
 });
 
-const activeRunnersSet = new Set();
+const raceActiveRunnersByTrail = new client.Gauge({
+  name: 'race_active_runners_by_trail',
+  help: 'Number of active runners detected per trail (TTL filtered)',
+  labelNames: ['trail'],
+  registers: [register]
+});
+
+const ACTIVE_TTL_MS = Number(process.env.RACE_ACTIVE_TTL_MS ?? 180000); // default 3 minutes
+const activeByTrail = {};
 
 // Start Metrics Server
 const metricsApp = express();
@@ -83,8 +91,29 @@ const do_consume = async (queue) => {
       const messageJson = JSON.parse(msg.content.toString());
 
       if (messageJson?.athlete) {
-        activeRunnersSet.add(messageJson.athlete);
-        raceActiveRunners.set(activeRunnersSet.size);
+        const now = Date.now();
+        const trailKey = messageJson.queue ?? 'default';
+
+        if (_.isNil(activeByTrail[trailKey])) {
+          activeByTrail[trailKey] = {};
+        }
+
+        activeByTrail[trailKey][messageJson.athlete] = now;
+
+        let totalActive = 0;
+        Object.entries(activeByTrail).forEach(([trail, athletes]) => {
+          Object.entries(athletes).forEach(([athlete, lastSeen]) => {
+            if (now - lastSeen > ACTIVE_TTL_MS) {
+              delete activeByTrail[trail][athlete];
+            }
+          });
+
+          const trailActiveCount = Object.keys(activeByTrail[trail]).length;
+          raceActiveRunnersByTrail.set({ trail }, trailActiveCount);
+          totalActive += trailActiveCount;
+        });
+
+        raceActiveRunners.set(totalActive);
       }
 
       if (_.isEmpty(socketList) || _.isEmpty(socketList[messageJson.queue])) return;
