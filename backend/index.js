@@ -36,7 +36,27 @@ const raceActiveRunnersByTrail = new client.Gauge({
 });
 
 const ACTIVE_TTL_MS = Number(process.env.RACE_ACTIVE_TTL_MS ?? 180000); // default 3 minutes
+const PRUNE_INTERVAL_MS = Number(process.env.RACE_PRUNE_INTERVAL_MS ?? 10000); // default 10 seconds
 const activeByTrail = {};
+
+const pruneAndUpdateGauges = () => {
+  const now = Date.now();
+  let totalActive = 0;
+
+  Object.entries(activeByTrail).forEach(([trail, athletes]) => {
+    Object.entries(athletes).forEach(([athlete, lastSeen]) => {
+      if (now - lastSeen > ACTIVE_TTL_MS) {
+        delete activeByTrail[trail][athlete];
+      }
+    });
+
+    const trailActiveCount = Object.keys(activeByTrail[trail]).length;
+    raceActiveRunnersByTrail.set({ trail }, trailActiveCount);
+    totalActive += trailActiveCount;
+  });
+
+  raceActiveRunners.set(totalActive);
+};
 
 // Start Metrics Server
 const metricsApp = express();
@@ -49,6 +69,9 @@ metricsApp.listen(9090, '0.0.0.0', () => {
   console.log('Metrics server running on port 9090');
 });
 // --------------------------------
+
+// Periodic prune to avoid waiting for new messages to drop stale runners
+setInterval(pruneAndUpdateGauges, PRUNE_INTERVAL_MS);
 
 const athletesPerTrail = {};
 const socketList = {};
@@ -98,22 +121,13 @@ const do_consume = async (queue) => {
           activeByTrail[trailKey] = {};
         }
 
-        activeByTrail[trailKey][messageJson.athlete] = now;
+        if (messageJson.event === 'finished') {
+          delete activeByTrail[trailKey][messageJson.athlete];
+        } else {
+          activeByTrail[trailKey][messageJson.athlete] = now;
+        }
 
-        let totalActive = 0;
-        Object.entries(activeByTrail).forEach(([trail, athletes]) => {
-          Object.entries(athletes).forEach(([athlete, lastSeen]) => {
-            if (now - lastSeen > ACTIVE_TTL_MS) {
-              delete activeByTrail[trail][athlete];
-            }
-          });
-
-          const trailActiveCount = Object.keys(activeByTrail[trail]).length;
-          raceActiveRunnersByTrail.set({ trail }, trailActiveCount);
-          totalActive += trailActiveCount;
-        });
-
-        raceActiveRunners.set(totalActive);
+        pruneAndUpdateGauges();
       }
 
       if (_.isEmpty(socketList) || _.isEmpty(socketList[messageJson.queue])) return;

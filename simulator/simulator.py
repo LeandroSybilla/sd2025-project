@@ -213,6 +213,23 @@ def simulate_multiple_athletes(trail):
     for thread in threads:
         thread.join()
 
+    # Notify finish for each athlete so backend can drop them immediately
+    credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
+    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], os.environ["RABBIT_VHOST"], credentials))
+    channel = connection.channel()
+    channel.queue_declare(queue=selected_trail["queue"])
+    for athlete in trail_athletes:
+        finish_event = {
+            "athlete": athlete["name"],
+            "gender": athlete["gender"],
+            "event": "finished",
+            "queue": selected_trail["queue"],
+            "time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+        }
+        channel.basic_publish(exchange='', routing_key=selected_trail["queue"], body=json.dumps(finish_event))
+        SIM_MESSAGES_PUBLISHED.inc()
+    connection.close()
+
 # Run the simulation
 if __name__ == "__main__":
     simulate_multiple_athletes(os.environ["TRAIL_ID"])
