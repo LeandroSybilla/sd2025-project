@@ -35,9 +35,24 @@ const raceActiveRunnersByTrail = new client.Gauge({
   registers: [register]
 });
 
+const raceMessageGaps = new client.Counter({
+  name: 'race_message_gaps_total',
+  help: 'Detected missing sequence numbers',
+  labelNames: ['trail', 'athlete', 'session'],
+  registers: [register]
+});
+
+const raceMessageDuplicates = new client.Counter({
+  name: 'race_message_duplicates_total',
+  help: 'Detected duplicate or out-of-order sequence numbers',
+  labelNames: ['trail', 'athlete', 'session'],
+  registers: [register]
+});
+
 const ACTIVE_TTL_MS = Number(process.env.RACE_ACTIVE_TTL_MS ?? 180000); // default 3 minutes
 const PRUNE_INTERVAL_MS = Number(process.env.RACE_PRUNE_INTERVAL_MS ?? 10000); // default 10 seconds
 const activeByTrail = {};
+const lastSeqByTrail = {};
 
 const pruneAndUpdateGauges = () => {
   const now = Date.now();
@@ -116,9 +131,27 @@ const do_consume = async (queue) => {
       if (messageJson?.athlete) {
         const now = Date.now();
         const trailKey = messageJson.queue ?? 'default';
+        const sessionId = messageJson.session_id ?? 'default';
+        const seq = messageJson.seq;
 
         if (_.isNil(activeByTrail[trailKey])) {
           activeByTrail[trailKey] = {};
+        }
+
+        if (_.isNil(lastSeqByTrail[trailKey])) {
+          lastSeqByTrail[trailKey] = {};
+        }
+
+        if (!_.isNil(seq)) {
+          const lastInfo = lastSeqByTrail[trailKey][messageJson.athlete];
+          if (!_.isNil(lastInfo) && lastInfo.session === sessionId) {
+            if (seq > lastInfo.seq + 1) {
+              raceMessageGaps.inc({ trail: trailKey, athlete: messageJson.athlete, session: sessionId }, seq - lastInfo.seq - 1);
+            } else if (seq <= lastInfo.seq) {
+              raceMessageDuplicates.inc({ trail: trailKey, athlete: messageJson.athlete, session: sessionId });
+            }
+          }
+          lastSeqByTrail[trailKey][messageJson.athlete] = { session: sessionId, seq };
         }
 
         if (messageJson.event === 'finished') {

@@ -5,6 +5,7 @@ import time
 import random
 import pika
 import os
+import uuid
 from prometheus_client import start_http_server, Counter, Gauge
 import threading
 
@@ -116,6 +117,7 @@ ATHLETES = [
 ]
 
 SPEED_VARIATION = (6, 12)  # Speed range in km/h for each athlete
+SESSION_ID = str(uuid.uuid4())
 
 # Function to read the GPX file
 def read_gpx(file_path):
@@ -127,6 +129,7 @@ def read_gpx(file_path):
 def simulate_athlete(athlete, points, speed_kmh, queue):
     athlete_name = athlete["name"]
     athlete_gender = athlete["gender"]
+    seq = 1
     # Convert speed to meters per second
     speed_mps = speed_kmh / 3.6
     SIM_SPEED_FACTOR.set(speed_kmh) # Set the gauge
@@ -157,7 +160,9 @@ def simulate_athlete(athlete, points, speed_kmh, queue):
                 "elevation": ele,
                 "time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                 "event": "running",
-                "queue": queue
+                "queue": queue,
+                "seq": seq,
+                "session_id": SESSION_ID
             }
 
             # Send the event to the backend
@@ -170,12 +175,35 @@ def simulate_athlete(athlete, points, speed_kmh, queue):
                 connection.close()
                 print(f"Sent: {event}")
                 SIM_MESSAGES_PUBLISHED.inc()
+                seq += 1
             except Exception as e:
                 print(f"Error sending event: {e}")
                 SIM_CONNECTION_ERRORS.inc()
 
             # Wait for 1 second to simulate real-time updates
             time.sleep(1)
+
+    # Send finished event
+    finish_event = {
+        "athlete": athlete_name,
+        "gender": athlete_gender,
+        "event": "finished",
+        "queue": queue,
+        "time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "seq": seq,
+        "session_id": SESSION_ID
+    }
+    try:
+        credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
+        connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], os.environ["RABBIT_VHOST"], credentials))
+        channel = connection.channel()
+        channel.queue_declare(queue=queue)
+        channel.basic_publish(exchange='', routing_key=queue, body=json.dumps(finish_event))
+        connection.close()
+        SIM_MESSAGES_PUBLISHED.inc()
+    except Exception as e:
+        print(f"Error sending finish event: {e}")
+        SIM_CONNECTION_ERRORS.inc()
 
 # Main function to simulate multiple athletes
 def simulate_multiple_athletes(trail):
@@ -212,23 +240,6 @@ def simulate_multiple_athletes(trail):
     # Wait for all threads to finish
     for thread in threads:
         thread.join()
-
-    # Notify finish for each athlete so backend can drop them immediately
-    credentials = pika.PlainCredentials(os.environ["RABBIT_USER"], os.environ["RABBIT_PASS"])
-    connection = pika.BlockingConnection(pika.ConnectionParameters(os.environ["RABBIT_URL"], os.environ["RABBIT_PORT"], os.environ["RABBIT_VHOST"], credentials))
-    channel = connection.channel()
-    channel.queue_declare(queue=selected_trail["queue"])
-    for athlete in trail_athletes:
-        finish_event = {
-            "athlete": athlete["name"],
-            "gender": athlete["gender"],
-            "event": "finished",
-            "queue": selected_trail["queue"],
-            "time": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-        }
-        channel.basic_publish(exchange='', routing_key=selected_trail["queue"], body=json.dumps(finish_event))
-        SIM_MESSAGES_PUBLISHED.inc()
-    connection.close()
 
 # Run the simulation
 if __name__ == "__main__":
